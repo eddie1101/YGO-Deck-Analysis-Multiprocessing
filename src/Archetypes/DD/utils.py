@@ -19,6 +19,10 @@ def gryphon_search(card: str, hand: list, main_deck: list) -> bool:
     return utils.add_card_from_deck_to_hand(card, hand, main_deck)
 
 
+def gryphon_special_summon(card: str, hand: list) -> bool:
+    return utils.special_summon_from_hand(card, hand)
+
+
 def caesar_search(card: str, hand: list, main_deck: list) -> bool:
     return utils.add_card_from_deck_to_hand(card, hand, main_deck)
 

@@ -135,19 +135,22 @@ def gilgamesh_scales(hand: list, main_deck: list, local_database: dict,
 
 
 def thomas_summon(main_deck: list, local_database: dict,
-                  card_name: str = "") -> str | bool:
-    for card in main_deck:
-        card_data: dict = utils.get_card_data(card, local_database)
-        cond_1: bool = "Monster" in card_data["type"]
-        cond_2: bool = card_data["level"] == 8
-        cond_3: bool = card_data["name"] != "D/D Savant Thomas"
-        if all([cond_1, cond_2, cond_3]):
-            cond_4: bool = card_name == ""
-            cond_5: bool = card_name == card_data["name"]
-            if any([cond_4, cond_5]):
-                card_name: str = card_data["name"]
-                main_deck.remove(card_name)
-                return True
+                  card_name: str = "") -> str | None:
+    if card_name != "":
+        if card_name in main_deck:
+            main_deck.remove(card_name)
+            return card_name
+        pass
+    else:
+        for card in main_deck:
+            card_data: dict = utils.get_card_data(card, local_database)
+            if "Monster" in card_data["type"]:
+                if card_data["level"] == 8:
+                    if "D/D/D" in card_data["name"]:
+                        main_deck.remove(card_data["name"])
+                        return card_data["name"]
+                    pass
+                pass
             pass
         pass
-    return False
+    return None

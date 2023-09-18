@@ -96,7 +96,7 @@ def main() -> None:
     deck = create_deck(path_to_deck, local_database)
     combos_dd.add_all_combos(deck)
     deck.analyze(ITERATIONS, local_database)
-    deck.print_analysis(ITERATIONS, analysis_level=2)
+    deck.print_analysis(ITERATIONS, analysis_level=3, detailed=True)
     return None
 
 

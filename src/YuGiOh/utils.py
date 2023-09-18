@@ -86,6 +86,13 @@ def dump_card_from_deck_to_GY(card: str, main_deck: list) -> bool:
     return False
 
 
+def discard_card(card: str, hand: list) -> bool:
+    if card in hand:
+        hand.remove(card)
+        return True
+    return False
+
+
 def extra_deck_summon(monster: str, extra_deck: list) -> bool:
     if monster in extra_deck:
         extra_deck.remove(monster)

@@ -60,18 +60,20 @@ def line_1(hand: list, main_deck: list, extra_deck: list,
     """
     hand_1: str = "D/D Savant Kepler"
     utils.normal_summon(hand_1, hand)
-    search: str = "Dark Contract with the Gate"
-    if not utils_dd.kepler_search(search, hand, main_deck):
-        if not utils.soft_brick_in_hand(search, hand):
+    card: str = "Dark Contract with the Gate"
+    if not utils_dd.kepler_search(card, hand, main_deck):
+        if not utils.soft_brick_in_hand(card, hand):
             return False
         pass
-    search: str = "D/D Gryphon"
-    if not utils_dd.gate_search(search, hand, main_deck):
-        if not utils.soft_brick_in_hand(search, hand):
+    utils.activate_spell_from_hand(card, hand)
+    card: str = "D/D Gryphon"
+    if not utils_dd.gate_search(card, hand, main_deck):
+        if not utils.soft_brick_in_hand(card, hand):
             return False
         pass
-    ed_monster: str = "D/D/D Abyss King Gilgamesh"
-    if not utils.extra_deck_summon(ed_monster, extra_deck):
+    utils_dd.gryphon_special_summon(card, hand)
+    card: str = "D/D/D Abyss King Gilgamesh"
+    if not utils.extra_deck_summon(card, extra_deck):
         return False
     scale_a_val: int = 0
     scale_b_name: str = "D/D Cerberus"
@@ -82,43 +84,164 @@ def line_1(hand: list, main_deck: list, extra_deck: list,
     if scales is None:
         return False
     utils.set_scales(scales, hand, main_deck)
-    extra_deck_monsters: list = [
+    cards: list = [
         "D/D/D Wave King Caesar",
         "D/D/D Marksman King Tell",
         "D/D/D Abyss King Gilgamesh"
     ]
-    for extra_deck_monster in extra_deck_monsters:
-        if not utils.extra_deck_summon(extra_deck_monster, extra_deck):
+    for card in cards:
+        if not utils.extra_deck_summon(card, extra_deck):
             return False
         pass
-    dump: str = "D/D Necro Slime"
-    if not utils.dump_card_from_deck_to_GY(dump, main_deck):
-        if not utils.soft_brick_in_hand(dump, hand):
+    card: str = "D/D Necro Slime"
+    if not utils.dump_card_from_deck_to_GY(card, main_deck):
+        if not utils.soft_brick_in_hand(card, hand):
             return False
+        else:
+            utils.discard_card(card, hand)
+            pass
         pass
-    extra_deck_monsters: list = [
+    cards: list = [
         "D/D/D Flame King Genghis",
         "D/D/D Deviser King Deus Machinex",
         "D/D/D Abyss King Gilgamesh"
     ]
-    for extra_deck_monster in extra_deck_monsters:
-        if not utils.extra_deck_summon(extra_deck_monster, extra_deck):
+    for card in cards:
+        if not utils.extra_deck_summon(card, extra_deck):
             return False
         pass
-    search: str = "Dark Contract with the Swamp King"
-    if not utils.dump_card_from_deck_to_GY(search, main_deck):
-        if not utils.soft_brick_in_hand(dump, hand):
+    card: str = "Dark Contract with the Swamp King"
+    if not utils.dump_card_from_deck_to_GY(card, main_deck):
+        if not utils.soft_brick_in_hand(card, hand):
             return False
         pass
-    extra_deck_monsters: list = [
+    utils.activate_spell_from_hand(card, hand)
+    cards: list = [
         "D/D/D Flame King Genghis",
         "D/D/D Wave High King Caesar",
         "D/D/D Deviser King Deus Machinex"
     ]
-    for extra_deck_monster in extra_deck_monsters:
-        if not utils.extra_deck_summon(extra_deck_monster, extra_deck):
+    for card in cards:
+        if not utils.extra_deck_summon(card, extra_deck):
             return False
         pass
+    return True
+
+
+def line_2(hand: list, main_deck: list, extra_deck: list,
+           local_database: dict) -> bool:
+    """
+    Starting Hand:
+        1. D/D Savant Kepler
+
+    Searched Cards:
+        2. Dark Contract with the Gate
+        3. D/D Gryphon
+        5. Scales [0 Scale + D/D Cerberus]
+        8. Dark Contract with the Swamp King
+        11. D/D/D Headhunt
+
+    Extra Deck Monsters:
+        4. D/D/D Abyss King Gilgamesh
+        6. D/D/D Wave King Caesar
+        7. D/D/D Abyss King Gilgamesh
+        9. D/D/D Flame King Genghis
+        10. D/D/D Deviser King Deus Machinex
+        12. D/D/D Abyss King Gilgamesh
+
+    Combo Line:
+        1. NS Kepler; Add Gate
+        2. Activate Gate; Add Gryphon
+        3. Gryphon ME (Hand); SS itself
+        4. LS Gilgamesh [Kepler + Gryphon]; Scale (0 Scale + D/D Cerberus)
+        5. PS Kepler and Gryphon
+        6. Cerberus PE; Change Kepler's lv to 4
+        7. XS R4 Caesar [Kepler + Gryphon]
+        8. LS Gilgamesh [Caesar + Gilgamesh]
+        9. Caesar eff (GY); Add Swamp King
+        10. Activate Swamp King; FS Genghis [Kepler (GY) + Gilgamesh (GY)]
+        11. XS R10 Machinex [Gilgamesh]
+        12. Genghis eff; Reborn Gryphon
+        13. Gryphon ME; Add Headhunt
+        14. LS Gilgamesh [Gryphon + Genghis]
+        15. Set Headhunt
+    """
+    hand_1: str = "D/D Savant Kepler"
+    utils.normal_summon(hand_1, hand)
+    card: str = "Dark Contract with the Gate"
+    if not utils_dd.kepler_search(card, hand, main_deck):
+        if not utils.soft_brick_in_hand(card, hand):
+            return False
+        pass
+    utils.activate_spell_from_hand(card, hand)
+    card: str = "D/D Gryphon"
+    if not utils_dd.gate_search(card, hand, main_deck):
+        if not utils.soft_brick_in_hand(card, hand):
+            return False
+        pass
+    card: str = "D/D/D Abyss King Gilgamesh"
+    if not utils.extra_deck_summon(card, extra_deck):
+        return False
+    scale_a_val: int = 0
+    scale_b_name: str = "D/D Cerberus"
+    scales: tuple | None = utils_dd.gilgamesh_scales(hand, main_deck,
+                                                     local_database,
+                                                     a_high=scale_a_val,
+                                                     b_name=scale_b_name)
+    if scales is None:
+        return False
+    utils.set_scales(scales, hand, main_deck)
+    cards: list = [
+        "D/D/D Wave King Caesar",
+        "D/D/D Abyss King Gilgamesh"
+    ]
+    for card in cards:
+        if not utils.extra_deck_summon(card, extra_deck):
+            return False
+        pass
+    card: str = "Dark Contract with the Swamp King"
+    if not utils_dd.caesar_search(card, hand, main_deck):
+        if not utils.soft_brick_in_hand(card, hand):
+            return False
+        pass
+    utils.activate_spell_from_hand(card, hand)
+    cards: list = [
+        "D/D/D Flame King Genghis",
+        "D/D/D Deviser King Deus Machinex"
+    ]
+    for card in cards:
+        if not utils.extra_deck_summon(card, extra_deck):
+            return False
+        pass
+    card: str = "D/D/D Headhunt"
+    if not utils_dd.gryphon_search(card, hand, main_deck):
+        if utils.soft_brick_in_hand(card, hand):
+            return False
+        pass
+    card: str = "D/D/D Abyss King Gilgamesh"
+    if not utils.extra_deck_summon(card, extra_deck):
+        return False
+    return True
+
+
+def line_X(hand: list, main_deck: list, extra_deck: list,
+           local_database: dict) -> bool:
+    """
+    Starting Hand:
+        x.
+
+    Searched Cards:
+        x.
+
+    Dumped Cards:
+        x.
+
+    Extra Deck Monsters:
+        x.
+
+    Combo Line:
+        1.
+    """
     return True
 
 
@@ -128,4 +251,8 @@ def all_one_card_combos() -> Combo:
         ["D/D Savant Kepler"]
     ]
     combos.add_combo_line(ComboLine(line_1, starting_hand))
+    combos.add_combo_line(ComboLine(line_2, starting_hand))
+    starting_hand: list = [
+        ["Dark Contract with the Gate"]
+    ]
     return combos

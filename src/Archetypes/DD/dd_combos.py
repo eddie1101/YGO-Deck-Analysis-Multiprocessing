@@ -23,6 +23,6 @@ def tournament_combos(local_database: dict) -> ComboCategory:
 
 
 def add_all_combos(deck: Deck, local_database: dict) -> None:
-    deck.add_combo_category(anime_combos(local_database))
+    # deck.add_combo_category(anime_combos(local_database))
     deck.add_combo_category(tournament_combos(local_database))
     return None

@@ -12,7 +12,7 @@ import requests
 
 
 from src.YuGiOh.Deck import Deck
-from src.Archetypes.DD import combos as combos_dd
+from src.Archetypes.DD import dd_combos as combos_dd
 
 URL: str = "https://db.ygoprodeck.com/api/v7/cardinfo.php"
 # ITERATIONS: int = 1
@@ -96,7 +96,7 @@ def main() -> None:
     deck = create_deck(path_to_deck, local_database)
     combos_dd.add_all_combos(deck)
     deck.analyze(ITERATIONS, local_database)
-    deck.print_analysis(ITERATIONS, analysis_level=3, detailed=True)
+    deck.print_analysis(ITERATIONS, analysis_level=3)
     return None
 
 

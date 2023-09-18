@@ -54,14 +54,12 @@ class ComboLine:
                                       local_database) if cih else False
         return cih, fc
 
+    def print_analysis(self, n: int, combo_line_num: int) -> None:
+        p_a: float = self.full_combo_count / n
+        p_b: float = self.combo_in_hand_count / n
+        p_c: float = p_a / p_b
+        print(f"\t\tCombo Line {combo_line_num}: "
+              f"[{100 * p_a:.4f}% / {100 * p_b:.4f}% / {100 * p_c:.4f}%]")
+        return None
 
-def print_analysis(self, n: int, combo_line_num: int) -> None:
-    p_a: float = self.full_combo_count / n
-    p_b: float = self.combo_in_hand_count / n
-    p_c: float = p_a / p_b
-    print(f"\t\tCombo Line {combo_line_num}: "
-          f"[{100 * p_a:.4f}% / {100 * p_b:.4f}% / {100 * p_c:.4f}%]")
-    return None
-
-
-pass
+    pass

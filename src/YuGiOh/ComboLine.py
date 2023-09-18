@@ -49,9 +49,14 @@ class ComboLine:
 
     def test_hand(self, hand: list, main_deck: list, extra_deck: list,
                   local_database: dict) -> tuple[bool, bool]:
+        # print(hand)
         cih: bool = self.is_combo_in_hand(hand)
         fc: bool = self.is_full_combo(hand, main_deck, extra_deck,
                                       local_database) if cih else False
+        # if (cih) and (not fc):
+        #     print(hand)
+        #     pass
+        # print("")
         return cih, fc
 
     def print_analysis(self, n: int, combo_line_num: int) -> None:

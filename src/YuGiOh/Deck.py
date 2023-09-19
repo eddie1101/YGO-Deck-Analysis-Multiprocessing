@@ -7,6 +7,8 @@ GitHub: https://github.com/rkp1503
 import copy
 import random
 
+from multiprocessing import Process, Value
+
 from src.YuGiOh.ComboCategory import ComboCategory
 
 
@@ -88,9 +90,9 @@ class Deck:
     def full_combo(self) -> None:
         self.full_combo_count += 1
         return None
-
+    
     def analyze(self, n: int, local_database: dict) -> None:
-        main_deck_src: list = copy.deepcopy(self.main_deck)
+        main_deck_src = copy.deepcopy(self.main_deck)
         for i in range(n):
             random.shuffle(main_deck_src)
             hand: list = main_deck_src[:5]
@@ -110,6 +112,51 @@ class Deck:
                 self.combo_in_hand_count += 1
                 if fc:
                     self.full_combo_count += 1
+                    pass
+                pass
+            pass
+        return None
+
+    def analyze_multi(self, n: int, num_threads: int, local_database: dict) -> None:
+        cih_count = Value('i', 0)
+        fc_count = Value('i', 0)
+
+        processes = [Process(target=self.analyze_part, args=(int(n / num_threads), local_database, copy.deepcopy(self.main_deck), cih_count, fc_count)) for x in range(num_threads)]
+
+        for p in processes:
+            p.start()
+
+        for p in processes:
+            p.join()
+
+        self.combo_in_hand_count = cih_count.value
+        self.full_combo_count = fc_count.value
+
+        return None
+        
+    
+    def analyze_part(self, n: int, local_database: dict, main_deck_src: list, cih_count: Value, fc_count: Value) -> None:
+        for i in range(n):
+            random.shuffle(main_deck_src)
+            hand: list = main_deck_src[:5]
+            main_deck: list = main_deck_src[5:]
+            cih_lst: list[bool] = []
+            fc_lst: list[bool] = []
+            for combo_category in self.combo_categories:
+                cih_cc, fc_cc = combo_category.test_hand(hand, main_deck,
+                                                         self.extra_deck,
+                                                         local_database)
+                cih_lst.append(cih_cc)
+                fc_lst.append(fc_cc)
+                pass
+            cih: bool = any(cih_lst)
+            fc: bool = any(fc_lst)
+            if cih:
+                with cih_count.get_lock():
+                    cih_count.value += 1
+                if fc:
+                    with fc_count.get_lock():
+                        fc_count.value += 1
                     pass
                 pass
             pass

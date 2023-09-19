@@ -7,21 +7,22 @@ GitHub: https://github.com/rkp1503
 import json
 import os
 import sys
+import time
 
 import requests
 
 
-from YuGiOh.Deck import Deck
-from Archetypes.DD import dd_combos as combos_dd
+from src.YuGiOh.Deck import Deck
+from src.Archetypes.DD import dd_combos as combos_dd
 
 URL: str = "https://db.ygoprodeck.com/api/v7/cardinfo.php"
 # ITERATIONS: int = 1
-ITERATIONS: int = 10_000
+ITERATIONS: int = 100_000
 
 
 def get_local_database() -> dict:
     local_database: dict = {}
-    path_to_local_database: str = "../assets/database.json"
+    path_to_local_database: str = "assets/database.json"
     if os.path.exists(path_to_local_database):
         with open(path_to_local_database, "r") as file:
             local_database: dict = json.load(file)
@@ -63,7 +64,7 @@ def create_deck(path_to_deck: str, local_database: dict) -> Deck:
             pass
         pass
     if local_database_updated:
-        with open("../assets/database.json", "w") as file:
+        with open("assets/database.json", "w") as file:
             json.dump(local_database, file)
             pass
         pass
@@ -84,7 +85,7 @@ def main() -> None:
                  "Terminating Program.")
         pass
     deck_name: str = sys.argv[1]
-    path_to_deck: str = f"../assets/decks/{deck_name}"
+    path_to_deck: str = f"assets/decks/{deck_name}"
     # Terminates the program if the deck to analyze does not exist
     if not (os.path.exists(path_to_deck)):
         sys.exit(f"Deck '{deck_name}' does not exist...\n"
@@ -93,10 +94,21 @@ def main() -> None:
     # Get the local database
     local_database: dict = get_local_database()
     # Create a deck
+
+    # timestamp = time.time()
+    # deck = create_deck(path_to_deck, local_database)
+    # combos_dd.add_all_combos(deck, local_database)
+    # deck.analyze(ITERATIONS, local_database)
+    # print(f'Sequential: {time.time() - timestamp} seconds')
+    # deck.print_analysis(ITERATIONS, analysis_level=3)
+
+    timestamp = time.time()
     deck = create_deck(path_to_deck, local_database)
     combos_dd.add_all_combos(deck, local_database)
-    deck.analyze(ITERATIONS, local_database)
+    deck.analyze_multi(ITERATIONS, 4, local_database)
+    print(f'Concurrent: {time.time() - timestamp} seconds')
     deck.print_analysis(ITERATIONS, analysis_level=3)
+
     return None
 
 
